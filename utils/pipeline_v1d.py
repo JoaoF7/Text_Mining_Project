@@ -2,15 +2,31 @@ import re
 import nltk
 import pandas as pd
 import numpy as np
+import emoji
 
 from collections import defaultdict, Counter
 from tqdm import tqdm
 from unidecode import unidecode
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 
+def emoji_to_unicode(text):
+    result = []
+    
+    for char in text:
+        # Check if the character is an emoji
+        if char in emoji.EMOJI_DATA:
+            # Convert emoji to its Unicode code point(s)
+            unicode_repr = ''.join([f"\\U{ord(c):08X}" for c in char])
+            result.append(unicode_repr)
+        else:
+            result.append(char)
+    
+    return ''.join(result)
+
 
 def regex_cleaner(raw_text, 
-            no_emojis = True, 
+            no_emojis = True,
+            emojis_to_unicode = True, 
             no_hashtags = True,
             hashtag_retain_words = True,
             no_newlines = True,
@@ -30,6 +46,8 @@ def regex_cleaner(raw_text,
     
     if no_emojis == True:
         clean_text = re.sub(emojis_pattern,"",raw_text)
+    elif emojis_to_unicode == True:
+        clean_text = emoji_to_unicode(raw_text)
     else:
         clean_text = raw_text
 
@@ -57,6 +75,8 @@ def lemmatize_all(token, list_pos=["n","v","a","r","s"]):
     for arg_1 in list_pos:
         token = wordnet_lem.lemmatize(token, arg_1)
     return token
+
+
 
 def main_pipeline(raw_text, 
                   print_output = True, 
