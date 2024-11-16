@@ -79,7 +79,7 @@ def lemmatize_all(token, list_pos=["n","v","a","r","s"]):
 
 
 def main_pipeline(raw_text, 
-                  print_output = True, 
+                  print_output = False, 
                   no_stopwords = True,
                   custom_stopwords = [],
                   convert_diacritics = True, 
