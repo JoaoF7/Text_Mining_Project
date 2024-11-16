@@ -11,6 +11,7 @@ from tqdm import tqdm
 from unidecode import unidecode
 from nltk.tokenize.treebank import TreebankWordDetokenizer
 from sklearn.base import BaseEstimator
+from sklearn import metrics
 
 class MainPipeline(BaseEstimator):
     def __init__(self, 
@@ -48,7 +49,7 @@ class MainPipeline(BaseEstimator):
         self.pos_tags_list = pos_tags_list
         self.tokenized_output = tokenized_output
         
-    def emoji_to_unicode(text):
+    def emoji_to_unicode(self, text):
         result = []
         
         for char in text:
@@ -225,3 +226,15 @@ def plot_term_frequency(df, nr_terms, df_name, show=True):
     plt.close()
 
     return fig
+
+def fold_score_calculator(y_pred, y_test, verbose=False):
+    
+    #Compute the binary classification scores (accuracy, precision, recall, F1, AUC) for the fold.
+    acc = metrics.accuracy_score(y_test, y_pred)
+    prec = metrics.precision_score(y_test, y_pred, average="weighted")
+    recall = metrics.recall_score(y_test, y_pred, average="weighted")
+    f1 = metrics.f1_score(y_test, y_pred, average="weighted")
+
+    if verbose == True:
+        print("Accuracy: {} \nPrecision: {} \nRecall: {} \nF1: {}".format(acc,prec,recall,f1))
+    return (acc, prec, recall, f1)
