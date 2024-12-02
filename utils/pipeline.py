@@ -162,7 +162,7 @@ class MainPipeline(BaseEstimator):
                 return str(detokens)
         
 
-def cooccurrence_matrix_sentence_generator(preproc_sentences, sentence_cooc=False, window_size=5):
+def cooccurrence_matrix_window_generator(preproc_sentences, sentence_cooc=False, window_size=5):
 
     co_occurrences = defaultdict(Counter)
 
